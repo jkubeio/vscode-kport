@@ -1,0 +1,111 @@
+{
+  "name": "vscode-kube-transporter",
+  "displayName": "vscode-kube-transporter",
+  "description": "Teleports your local app in devmode to a Kubernetes cluster and replace your remote app running there. It is done through bi-directionnal port forwarding.",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.73.1"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "vscode-kube-transporter.init",
+        "title": "Init Kube-Transporter"
+      },
+      {
+        "command": "kubeTransporter.start",
+        "title": "Start",
+        "icon": {
+          "light": "resources/light/boolean.svg",
+          "dark": "resources/dark/boolean.svg"
+        }
+      },
+      {
+        "command": "kubeTransporter.stop",
+        "title": "Stop",
+        "icon": {
+          "light": "resources/dark/boolean.svg",
+          "dark": "resources/light/boolean.svg"
+        }
+      },
+      {
+        "command": "kubeTransporter.refreshEntry",
+        "title": "Refresh",
+        "icon": {
+          "light": "resources/light/refresh.svg",
+          "dark": "resources/dark/refresh.svg"
+        }
+      }
+    ],
+    "viewsWelcome": [
+      {
+        "view": "kubeTransporter",
+        "contents": "No .transporter.yaml file found for the project [learn more](https://www.eclipse.org/jkube/).\n[TODOInitialise .transporter.yaml](command:kubeTransporter.addService)"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "kube-transporter",
+          "title": "Kube Transporter",
+          "icon": "resources/cyclone.svg"
+        }
+      ]
+    },
+    "views": {
+      "kube-transporter": [
+        {
+          "id": "kubeTransporter",
+          "name": "Kube Transporter"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "kubeTransporter.refreshEntry",
+          "when": "view == kubeTransporter",
+          "group": "navigation"
+        },
+        {
+          "command": "kubeTransporter.start",
+          "when": "view == kubeTransporter",
+          "group": "navigation"
+        },
+        {
+          "command": "kubeTransporter.stop",
+          "when": "view == kubeTransporter",
+          "group": "navigation"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "yarn run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "yarn run compile && yarn run lint",
+    "lint": "eslint src --ext ts"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.5",
+    "@types/glob": "^8.1.0",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "16.x",
+    "@types/vscode": "^1.73.1",
+    "@typescript-eslint/eslint-plugin": "^5.56.0",
+    "@typescript-eslint/parser": "^5.56.0",
+    "@vscode/test-electron": "^2.3.0",
+    "eslint": "^8.36.0",
+    "glob": "^8.1.0",
+    "mocha": "^10.2.0",
+    "typescript": "^4.9.5"
+  }
+}
