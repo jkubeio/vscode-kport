@@ -3,34 +3,40 @@ import { ChildProcess } from 'child_process';
 import { existsSync, readFileSync } from 'fs';
 import { load } from 'js-yaml';
 import * as vscode from 'vscode';
-import { KubeTransporterTreeDataProvider } from './kubeTransporterTreeDataProvider';
+import { KubeKportTreeDataProvider } from './kportTreeDataProvider';
 import * as http from 'http';
 import { sep } from 'path';
 
 let proc: ChildProcess;
 
 export function activate(context: vscode.ExtensionContext) {
-	let outChannel = vscode.window.createOutputChannel('Transporter');
+	let outChannel = vscode.window.createOutputChannel('Kport');
 	let config:any = {};
+
 	if(vscode.workspace.workspaceFolders){
 		if (vscode.workspace.workspaceFolders[0]) {
-			outChannel.appendLine("Checking for .transporter.yaml file in " + vscode.workspace.workspaceFolders[0].uri.path);
-			const configFile = vscode.workspace.workspaceFolders[0].uri.path + sep + ".transporter.yaml";
+			outChannel.appendLine("Checking for .kport.yaml file in " + vscode.workspace.workspaceFolders[0].uri.path);
+			const configFile = vscode.workspace.workspaceFolders[0].uri.path + sep + ".kport.yaml";
 			if (existsSync(configFile )) {
 				config = load(readFileSync(configFile, 'utf8'));
 			}
 		}
 	}
 
-	const kubeTransporterDataProvider = new KubeTransporterTreeDataProvider(config);
-	context.subscriptions.push(vscode.window.registerTreeDataProvider('kubeTransporter', kubeTransporterDataProvider));
-	context.subscriptions.push(vscode.commands.registerCommand('kubeTransporter.refreshEntry', () => kubeTransporterDataProvider.refresh()));
+	const kportDataProvider = new KubeKportTreeDataProvider(config);
+	context.subscriptions.push(vscode.window.registerTreeDataProvider('kport', kportDataProvider));
+	context.subscriptions.push(vscode.commands.registerCommand('kport.refreshEntry', () => kportDataProvider.refresh()));
 
+	let watcher = vscode.workspace.createFileSystemWatcher("**/.kport.yaml");
+	context.subscriptions.push(watcher);
+	watcher.onDidChange(uri => kportDataProvider.refresh());
+	watcher.onDidCreate(uri => kportDataProvider.refresh());
+	watcher.onDidDelete(uri => kportDataProvider.refresh());
 
-	// start the transporter server
+	// start the kport server
 	// if (!proc || proc.killed) {
 	// 	const cp = require('child_process')
-	// 	proc = cp.spawn('/home/sunix/github/sunix/kubectl-teleport/target/kubectl-transporter-1.0.0-SNAPSHOT-runner', {
+	// 	proc = cp.spawn('/home/sunix/github/sunix/kubectl-teleport/target/kubectl-kport-1.0.0-SNAPSHOT-runner', {
 	// 		cwd: '/home/sunix/github/redhat-developer-demos/northwind-traders/northwind/'
 	// 	}, (err: Error, stdout: string, stderr: string) => {
 	// 		outChannel.appendLine(stdout);
@@ -41,7 +47,7 @@ export function activate(context: vscode.ExtensionContext) {
 	// 	proc.kill();
 	// }
 
-	context.subscriptions.push(vscode.commands.registerCommand('kubeTransporter.stop', () => {
+	context.subscriptions.push(vscode.commands.registerCommand('kport.stop', () => {
 
 		let options = {
 			hostname: 'localhost',
@@ -64,14 +70,14 @@ export function activate(context: vscode.ExtensionContext) {
 			outChannel.appendLine('problem with request: ' + e.message);
 		});
 
-		req.write(JSON.stringify(kubeTransporterDataProvider.config));
+		req.write(JSON.stringify(kportDataProvider.config));
 
 		req.end();
-		kubeTransporterDataProvider.started = false;
+		kportDataProvider.started = false;
 
 	}));
 
-	context.subscriptions.push(vscode.commands.registerCommand('kubeTransporter.hello', () => {
+	context.subscriptions.push(vscode.commands.registerCommand('kport.hello', () => {
 		http.get({
 			hostname: 'localhost',
 			port: 10680,
@@ -94,7 +100,7 @@ export function activate(context: vscode.ExtensionContext) {
 			outChannel.appendLine(error.message);
 		});
 	}));
-	context.subscriptions.push(vscode.commands.registerCommand('kubeTransporter.start', () => {
+	context.subscriptions.push(vscode.commands.registerCommand('kport.start', () => {
 		let options = {
 			hostname: 'localhost',
 			port: 10680,
@@ -110,21 +116,21 @@ export function activate(context: vscode.ExtensionContext) {
 			res.setEncoding('utf8');
 			res.on('data', function (body) {
 				outChannel.appendLine('Body: ' + body);
-				kubeTransporterDataProvider.started = true;
+				kportDataProvider.started = true;
 			});
 		});
 		req.on('error', function (e) {
 			outChannel.appendLine('problem with request: ' + e.message);
-			kubeTransporterDataProvider.started = false;
+			kportDataProvider.started = false;
 		});
 
-		req.write(JSON.stringify(kubeTransporterDataProvider.config));
+		req.write(JSON.stringify(kportDataProvider.config));
 
 		req.end();
 	}));
 
-	context.subscriptions.push(vscode.commands.registerCommand('kubeTransporter.addNewRemoteService', () => {
-		// kubeTransporterDataProvider.config;
+	context.subscriptions.push(vscode.commands.registerCommand('kport.addNewRemoteService', () => {
+		// kportDataProvider.config;
 	}));
 	
 }

@@ -1,8 +1,8 @@
-# vscode-kube-transporter
-Temp: requires https://github.com/sunix/jkube-transporter/tree/main/transporter-ide-server to be running
+# vscode-kport
+Temp: requires https://github.com/sunix/kport/tree/main/kport-ide-server to be running
 TODO README
 
-This is the README for your extension "vscode-kube-transporter". After writing up a brief description, we recommend including the following sections.
+This is the README for your extension "vscode-kport". After writing up a brief description, we recommend including the following sections.
 
 ## Features
 

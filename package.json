@@ -1,6 +1,6 @@
 {
-  "name": "vscode-kube-transporter",
-  "displayName": "vscode-kube-transporter",
+  "name": "vscode-kport",
+  "displayName": "vscode-kport",
   "description": "Teleports your local app in devmode to a Kubernetes cluster and replace your remote app running there. It is done through bi-directionnal port forwarding.",
   "version": "0.0.1",
   "engines": {
@@ -16,11 +16,11 @@
   "contributes": {
     "commands": [
       {
-        "command": "vscode-kube-transporter.init",
-        "title": "Init Kube-Transporter"
+        "command": "vscode-kport.init",
+        "title": "Init Kube-Kport"
       },
       {
-        "command": "kubeTransporter.start",
+        "command": "kport.start",
         "title": "Start",
         "icon": {
           "light": "resources/light/boolean.svg",
@@ -28,7 +28,7 @@
         }
       },
       {
-        "command": "kubeTransporter.stop",
+        "command": "kport.stop",
         "title": "Stop",
         "icon": {
           "light": "resources/dark/boolean.svg",
@@ -36,7 +36,7 @@
         }
       },
       {
-        "command": "kubeTransporter.refreshEntry",
+        "command": "kport.refreshEntry",
         "title": "Refresh",
         "icon": {
           "light": "resources/light/refresh.svg",
@@ -46,42 +46,42 @@
     ],
     "viewsWelcome": [
       {
-        "view": "kubeTransporter",
-        "contents": "No .transporter.yaml file found for the project [learn more](https://www.eclipse.org/jkube/).\n[TODOInitialise .transporter.yaml](command:kubeTransporter.addService)"
+        "view": "kport",
+        "contents": "No .kport.yaml file found for the project [learn more](https://www.eclipse.org/jkube/).\n[TODOInitialise .kport.yaml](command:kport.addService)"
       }
     ],
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "kube-transporter",
-          "title": "Kube Transporter",
+          "id": "kport",
+          "title": "Kube Kport",
           "icon": "resources/cyclone.svg"
         }
       ]
     },
     "views": {
-      "kube-transporter": [
+      "kport": [
         {
-          "id": "kubeTransporter",
-          "name": "Kube Transporter"
+          "id": "kport",
+          "name": "Kube Kport"
         }
       ]
     },
     "menus": {
       "view/title": [
         {
-          "command": "kubeTransporter.refreshEntry",
-          "when": "view == kubeTransporter",
+          "command": "kport.refreshEntry",
+          "when": "view == kport",
           "group": "navigation"
         },
         {
-          "command": "kubeTransporter.start",
-          "when": "view == kubeTransporter",
+          "command": "kport.start",
+          "when": "view == kport",
           "group": "navigation"
         },
         {
-          "command": "kubeTransporter.stop",
-          "when": "view == kubeTransporter",
+          "command": "kport.stop",
+          "when": "view == kport",
           "group": "navigation"
         }
       ]
