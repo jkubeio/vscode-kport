@@ -4,6 +4,7 @@ import { existsSync, readFileSync } from 'fs';
 import { load } from 'js-yaml';
 import * as vscode from 'vscode';
 import { KubeKportTreeDataProvider } from './kportTreeDataProvider';
+import { downloadBinary } from './server/ideServer';
 import * as http from 'http';
 import { sep } from 'path';
 
@@ -32,6 +33,25 @@ export function activate(context: vscode.ExtensionContext) {
 	watcher.onDidChange(uri => kportDataProvider.refresh());
 	watcher.onDidCreate(uri => kportDataProvider.refresh());
 	watcher.onDidDelete(uri => kportDataProvider.refresh());
+
+	// download the kport binary and get the binary path
+	downloadBinary().then((binaryPath) => {
+		// start the kport server
+		if (!proc || proc.killed) {
+			const cp = require('child_process')
+			proc = cp.spawn(binaryPath, {
+				cwd: vscode.workspace.workspaceFolders![0].uri.path // the current workspace folder
+			}, (err: Error, stdout: string, stderr: string) => {
+				outChannel.appendLine(stdout);
+				outChannel.appendLine(stderr);
+			});
+		}
+		else {
+			proc.kill();
+		}
+	});
+
+
 
 	// start the kport server
 	// if (!proc || proc.killed) {
