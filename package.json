@@ -1,8 +1,13 @@
 {
   "name": "vscode-kport",
   "displayName": "vscode-kport",
+  "publisher": "jkubeio",
   "description": "Teleports your local app in devmode to a Kubernetes cluster and replace your remote app running there. It is done through bi-directionnal port forwarding.",
   "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jkubeio/vscode-kport"
+  },
   "engines": {
     "vscode": "^1.73.1"
   },
