@@ -1,0 +1,26 @@
+name: PR Build
+on:
+  pull_request:
+    branches:
+      - 
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+      - run: npm install
+      - run: npm run vscode:prepublish
+      - name: Install vsce
+        run: npm install -g vsce
+      - name: Package extension
+        run: vsce package
+      - uses: actions/upload-artifact@v2
+        with:
+          path: vscode-kport-0.0.1.vsix
+
+
+
+
